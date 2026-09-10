@@ -1,288 +1,42 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>外出用餐紀錄 V2.1</title>
-<style>
-:root{--bg:#f5f6f8;--card:#fff;--text:#202124;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--ok:#16803c;--danger:#c62828;--soft:#eef4ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
-.container{max-width:760px;margin:auto;padding:18px 14px 50px}.title{font-size:26px;font-weight:800;margin:8px 4px 4px}.subtitle{color:var(--muted);font-size:14px;margin:0 4px 18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-h2{font-size:18px;margin:0 0 12px}label{display:block;font-size:14px;font-weight:700;margin:10px 0 6px}
-input,select,button{font:inherit}input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:11px;background:#fff;color:var(--text);font-size:16px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-button{border:0;border-radius:11px;padding:12px 14px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:white}.secondary{background:#eef0f3;color:#222}.danger{background:#fee2e2;color:#991b1b}.small{padding:8px 10px;font-size:13px}
-.people-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;align-items:center;margin:8px 0}.people-row input{min-width:0}
-.mode{display:flex;gap:8px}.mode button{flex:1}.mode .active{background:var(--accent);color:#fff}
-.restaurant-item{border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0;background:#fafafa}.restaurant-name{font-weight:800}.restaurant-meta{font-size:13px;color:var(--muted);margin:4px 0 8px}
-.status{font-size:14px;border-radius:10px;padding:10px;margin-top:9px;background:#f3f4f6}.status.ok{background:#ecfdf3;color:#166534}.status.err{background:#fef2f2;color:#991b1b}.status.info{background:#eff6ff;color:#1d4ed8}
-.amount-line{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;align-items:center;margin:8px 0}.money{text-align:right;font-weight:800}
-.summary{background:var(--soft);border-radius:12px;padding:12px;margin-top:12px}.transfer{padding:9px 0;border-bottom:1px solid rgba(0,0,0,.08)}.transfer:last-child{border-bottom:0}
-.history-item{border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0}.history-head{display:flex;justify-content:space-between;gap:10px}.muted{color:var(--muted);font-size:13px}
-.hidden{display:none!important}.right{text-align:right}.total{font-size:21px;font-weight:900}.notice{font-size:13px;color:var(--muted);line-height:1.55}
-@media(max-width:520px){.row{grid-template-columns:1fr}.people-row{grid-template-columns:1.2fr 1fr 1fr}.container{padding-left:10px;padding-right:10px}}
-@media(prefers-color-scheme:dark){:root{--bg:#111827;--card:#1f2937;--text:#f3f4f6;--muted:#9ca3af;--line:#374151;--soft:#172554}input,select{background:#111827;color:#f3f4f6;border-color:#4b5563}.secondary{background:#374151;color:#f3f4f6}.restaurant-item{background:#111827}.status{background:#374151}}
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="title">🍽️ 外出用餐紀錄 V2.1</div>
-  <div class="subtitle">支援平均分攤、個別金額、代付款與自動算出「誰欠誰」。</div>
-
-  <div class="card">
-    <h2>① 用餐資訊</h2>
-    <div class="row">
-      <div><label>日期</label><input id="date" type="date"></div>
-      <div><label>時間</label><input id="time" type="time"></div>
-    </div>
-    <label>用餐地點／餐廳</label>
-    <input id="restaurant" type="text" placeholder="例如：鼎泰豐">
-    <div class="row" style="margin-top:10px">
-      <button class="secondary" id="locBtn">📍 取得目前位置</button>
-      <button class="secondary" id="nearBtn">🍜 搜尋附近餐廳</button>
-    </div>
-    <div id="locationStatus" class="status info">尚未取得位置。建議從 HTTPS（例如 GitHub Pages）開啟本頁面。</div>
-    <div id="restaurants"></div>
-  </div>
-
-  <div class="card">
-    <h2>② 用餐人員（最多 5 人）</h2>
-    <div id="people"></div>
-    <button class="secondary small" id="addPerson">＋ 新增人員</button>
-  </div>
-
-  <div class="card">
-    <h2>③ 餐費</h2>
-    <label>總餐費（NT$）</label>
-    <input id="total" type="number" min="0" step="1" inputmode="decimal" placeholder="例如：1280">
-
-    <label>分攤方式</label>
-    <div class="mode">
-      <button id="avgMode" class="active">⚖️ 平均分攤</button>
-      <button id="individualMode">✏️ 個別金額</button>
-    </div>
-    <div id="owedArea"></div>
-    <div id="owedStatus" class="status"></div>
-  </div>
-
-  <div class="card">
-    <h2>④ 實際付款</h2>
-    <label>付款方式</label>
-    <div class="mode">
-      <button id="singlePay" class="active">👤 一人先付</button>
-      <button id="multiPay">👥 多人分別付款</button>
-    </div>
-    <div id="singlePayArea">
-      <label>誰先付款？</label>
-      <select id="payer"></select>
-      <div class="notice" style="margin-top:8px">選定的人會視為先支付全部餐費，之後由系統計算其他人應該還給他多少。</div>
-    </div>
-    <div id="multiPayArea" class="hidden"></div>
-    <div id="paidStatus" class="status"></div>
-  </div>
-
-  <div class="card">
-    <h2>⑤ 結算結果</h2>
-    <div id="result">請先輸入餐費與人員。</div>
-  </div>
-
-  <div class="card">
-    <button class="primary" id="saveBtn" style="width:100%">💾 儲存用餐紀錄</button>
-    <div id="saveStatus" class="status hidden"></div>
-  </div>
-
-  <div class="card">
-    <h2>🔎 歷史紀錄</h2>
-    <input id="search" type="search" placeholder="搜尋餐廳、人員、日期…">
-    <div id="history"></div>
-  </div>
-</div>
-
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#111827"><title>外出用餐紀錄 V3</title><style>:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111827;background:#f3f4f6}*{box-sizing:border-box}body{margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:24px;margin:6px 0 14px}.card{background:#fff;border-radius:16px;padding:15px;margin:10px 0;box-shadow:0 2px 10px #0001}label{display:block;font-weight:700;margin:10px 0 5px}input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:10px;background:#fff}button{border:0;border-radius:10px;padding:10px 13px;background:#e5e7eb;color:#111827;font-weight:700}button.primary{background:#111827;color:#fff}.danger{background:#fee2e2}.small{font-size:13px;color:#6b7280}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:110px}.people{display:flex;gap:8px;flex-wrap:wrap}.person{min-width:54px;border:2px solid #d1d5db;background:#fff}.person.selected{background:#111827;color:#fff;border-color:#111827}.mode button.active{background:#111827;color:#fff}.status{padding:9px 11px;border-radius:9px;background:#f3f4f6;margin-top:8px}.ok{background:#ecfdf5;color:#065f46}.err{background:#fef2f2;color:#991b1b}.record{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin:8px 0}.record b{font-size:16px}.money{font-variant-numeric:tabular-nums}.hidden{display:none!important}hr{border:0;border-top:1px solid #e5e7eb;margin:14px 0}.tag{display:inline-block;background:#eef2ff;border-radius:99px;padding:3px 8px;margin:2px;font-size:13px}.transfer{padding:5px 0}footer{text-align:center;color:#6b7280;font-size:12px;padding:20px}#modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}#modal>div{background:#fff;border-radius:16px;padding:18px;width:min(420px,100%)}</style></head><body>
+<h1>🍽️ 外出用餐紀錄 V3</h1>
+<div class="card"><div class="row"><button class="primary" onclick="showToday()">📅 今日用餐</button><button onclick="unlockHistory()">🔐 歷史紀錄</button></div><div id="cloudStatus" class="status">尚未連線雲端</div></div>
+<section id="todaySection"><div class="card"><h2>新增今日用餐</h2><div class="row"><div><label>日期</label><input id="date" type="date"></div><div><label>時間</label><input id="time" type="time"></div></div><label>餐廳</label><input id="restaurant" placeholder="例如：鼎泰豐"><div class="row" style="margin-top:8px"><button onclick="getLocation()">📍 取得目前位置</button><button onclick="nearbyRestaurants()">🔎 搜尋附近餐廳</button></div><div id="locationStatus" class="small"></div><div id="nearby"></div><label>用餐人員</label><div id="people" class="people"></div><div class="small">點選加入本次用餐的人。</div><label>總餐費</label><input id="total" type="number" min="0" step="1" inputmode="decimal" placeholder="例如：1200"><label>分攤方式</label><div class="row mode" id="splitMode"><button data-v="average" class="active" onclick="setSplit('average')">平均分攤</button><button data-v="individual" onclick="setSplit('individual')">個別金額</button></div><div id="owedArea"></div><label>付款方式</label><div class="row mode"><button id="singleBtn" class="active" onclick="setPay('single')">單一付款人</button><button id="multiBtn" onclick="setPay('multi')">多人付款</button></div><div id="paidArea"></div><div id="result" class="card" style="background:#f9fafb"></div><button class="primary" style="width:100%" onclick="saveRecord()">☁️ 儲存今日紀錄</button></div><div class="card"><h2>📅 今日紀錄</h2><div id="todayRecords"><div class="small">載入中…</div></div></div></section>
+<section id="historySection" class="hidden"><div class="card"><div class="row"><button onclick="showToday()">📅 今日</button><button class="danger" onclick="lockHistory()">🔒 鎖定歷史</button></div><label>搜尋歷史紀錄</label><input id="historySearch" placeholder="日期、餐廳、人員…" oninput="renderHistory()"></div><div class="card"><h2>📚 歷史紀錄</h2><div id="historyRecords"></div></div></section><footer>V3 · GitHub Pages + Supabase</footer>
+<div id="modal" class="hidden"><div><h2>🔐 解鎖歷史紀錄</h2><p class="small">輸入群組密碼。解鎖後，本次瀏覽期間不需重複輸入。</p><input id="historyPassword" type="password" placeholder="群組密碼" autocomplete="current-password"><div class="row" style="margin-top:12px"><button onclick="closeModal()">取消</button><button class="primary" onclick="doHistoryLogin()">解鎖</button></div><div id="loginMsg" class="small" style="margin-top:8px"></div></div></div>
 <script>
-const $=id=>document.getElementById(id);
-let people=[{name:"",owed:0,paid:0},{name:"",owed:0,paid:0}];
-let splitMode="average", payMode="single", coords=null;
-const KEY="dining-record-v2.1";
-
-function nowInit(){
-  const d=new Date(), p=n=>String(n).padStart(2,"0");
-  $("date").value=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
-  $("time").value=`${p(d.getHours())}:${p(d.getMinutes())}`;
-}
-function money(v){return "NT$ "+Number(v||0).toLocaleString("zh-TW",{minimumFractionDigits:0,maximumFractionDigits:2});}
-function cents(v){return Math.round((Number(v)||0)*100);}
-function fromCents(v){return v/100;}
-function renderPeople(){
-  $("people").innerHTML=people.map((p,i)=>`
-    <div class="people-row">
-      <input data-name="${i}" value="${esc(p.name)}" placeholder="姓名 ${i+1}">
-      <button class="danger small" data-del="${i}" ${people.length<=1?"disabled":""}>刪除</button>
-      <span></span>
-    </div>`).join("");
-  $("people").querySelectorAll("[data-name]").forEach(x=>x.oninput=e=>{people[+e.target.dataset.name].name=e.target.value; updateAll();});
-  $("people").querySelectorAll("[data-del]").forEach(x=>x.onclick=()=>{people.splice(+x.dataset.del,1);renderPeople();updateAll();});
-  updatePayerOptions(); renderPayArea();
-}
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
-function namesOK(){return people.every(p=>p.name.trim()) && people.length>0;}
-function calcOwed(){
-  const totalC=cents($("total").value);
-  if(splitMode==="average"){
-    const n=people.length, base=Math.floor(totalC/n), rem=totalC%n;
-    people.forEach((p,i)=>p.owed=fromCents(base+(i<rem?1:0)));
-  }else{
-    document.querySelectorAll("[data-owed]").forEach(x=>people[+x.dataset.owed].owed=Number(x.value)||0);
-  }
-}
-function renderOwed(){
-  if(splitMode==="average"){
-    $("owedArea").innerHTML=`<div class="summary">每人約 <b>${money((Number($("total").value)||0)/Math.max(1,people.length))}</b>。若無法整除，系統會自動以 1 元／0.01 元差額分配，確保總額完全一致。</div>`;
-  }else{
-    $("owedArea").innerHTML=people.map((p,i)=>`
-      <div class="amount-line"><div>${esc(p.name||"人員 "+(i+1))}</div>
-      <input data-owed="${i}" type="number" min="0" step="1" inputmode="decimal" value="${p.owed||0}" placeholder="應付金額"></div>`).join("");
-    $("owedArea").querySelectorAll("[data-owed]").forEach(x=>x.oninput=()=>{
-      people[+x.dataset.owed].owed=Number(x.value)||0;
-      // 不重新 renderOwed，避免 iPhone Safari 每輸入一個數字就失去焦點、鍵盤消失
-      updateOwedStatus();
-      updatePaid();
-      updateResult();
-    });
-  }
-}
-function updateOwedStatus(){
-  const totalC=cents($("total").value), sumC=people.reduce((s,p)=>s+cents(p.owed),0), diff=sumC-totalC;
-  $("owedStatus").className="status "+(Math.abs(diff)<=0?"ok":"err");
-  $("owedStatus").textContent=Math.abs(diff)<=0?`✓ 應付總額 ${money(fromCents(sumC))}，與餐費相符。`:`⚠️ 應付總額 ${money(fromCents(sumC))}，與餐費相差 ${money(fromCents(Math.abs(diff)))}。`;
-}
-function updatePayerOptions(){
-  const old=$("payer").value;
-  $("payer").innerHTML=people.map((p,i)=>`<option value="${i}">${esc(p.name||"人員 "+(i+1))}</option>`).join("");
-  if(old<people.length)$("payer").value=old;
-}
-function renderPayArea(){
-  if(payMode==="single"){
-    $("singlePayArea").classList.remove("hidden");$("multiPayArea").classList.add("hidden");
-  }else{
-    $("singlePayArea").classList.add("hidden");$("multiPayArea").classList.remove("hidden");
-    $("multiPayArea").innerHTML=people.map((p,i)=>`
-      <div class="amount-line"><div>${esc(p.name||"人員 "+(i+1))}</div>
-      <input data-paid="${i}" type="number" min="0" step="1" inputmode="decimal" value="${p.paid||0}" placeholder="實付金額"></div>`).join("");
-    $("multiPayArea").querySelectorAll("[data-paid]").forEach(x=>x.oninput=()=>{people[+x.dataset.paid].paid=Number(x.value)||0;updateAll();});
-  }
-  updatePaid();
-}
-function updatePaid(){
-  const totalC=cents($("total").value);
-  if(payMode==="single"){
-    const idx=Number($("payer").value)||0;people.forEach((p,i)=>p.paid=i===idx?fromCents(totalC):0);
-  }
-  const sumC=people.reduce((s,p)=>s+cents(p.paid),0), diff=sumC-totalC;
-  $("paidStatus").className="status "+(diff===0?"ok":"err");
-  $("paidStatus").textContent=diff===0?`✓ 實付總額 ${money(fromCents(sumC))}，與餐費相符。`:`⚠️ 實付總額 ${money(fromCents(sumC))}，與餐費相差 ${money(fromCents(Math.abs(diff)))}。`;
-}
-function settle(){
-  const balances=people.map(p=>cents(p.paid)-cents(p.owed));
-  const creditors=balances.map((v,i)=>({i,v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
-  const debtors=balances.map((v,i)=>({i,v:-v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
-  const transfers=[];let a=0,b=0;
-  while(a<debtors.length&&b<creditors.length){
-    const d=debtors[a],c=creditors[b],amt=Math.min(d.v,c.v);
-    transfers.push({from:d.i,to:c.i,amount:fromCents(amt)});
-    d.v-=amt;c.v-=amt;if(d.v===0)a++;if(c.v===0)b++;
-  }
-  return {balances:people.map((p,i)=>({i,balance:fromCents(balances[i])})),transfers};
-}
-function updateResult(){
-  const total=Number($("total").value)||0;
-  if(!total||!namesOK()){$("result").innerHTML=`<div class="notice">請輸入總餐費，並填寫每位用餐者姓名。</div>`;return;}
-  const s=settle();
-  let html=`<div class="total">${money(total)}</div><div style="margin:8px 0 12px">每人結算：</div>`;
-  html+=people.map((p,i)=>{const b=s.balances[i].balance;return `<div class="amount-line"><div>${esc(p.name)}</div><div class="money">${b>0?"應收 "+money(b):b<0?"應付 "+money(-b):"已結清"}</div></div>`}).join("");
-  html+=`<div class="summary"><b>建議轉帳</b>`;
-  if(!s.transfers.length)html+=`<div style="margin-top:8px">✓ 不需要轉帳，大家已結清。</div>`;
-  else s.transfers.forEach(t=>html+=`<div class="transfer">💸 <b>${esc(people[t.from].name)}</b> → <b>${esc(people[t.to].name)}</b>：<b>${money(t.amount)}</b></div>`);
-  html+=`</div>`;$("result").innerHTML=html;
-}
-function updateAll(){calcOwed();renderOwed();updateOwedStatus();updatePaid();updateResult();}
-function setSplit(m){splitMode=m;$("avgMode").classList.toggle("active",m==="average");$("individualMode").classList.toggle("active",m==="individual");renderOwed();updateAll();}
-function setPay(m){payMode=m;$("singlePay").classList.toggle("active",m==="single");$("multiPay").classList.toggle("active",m==="multi");renderPayArea();updateAll();}
-$("addPerson").onclick=()=>{if(people.length<5){people.push({name:"",owed:0,paid:0});renderPeople();}else alert("最多 5 人。");};
-$("avgMode").onclick=()=>setSplit("average");$("individualMode").onclick=()=>setSplit("individual");
-$("singlePay").onclick=()=>setPay("single");$("multiPay").onclick=()=>setPay("multi");
-$("payer").onchange=()=>{updatePaid();updateResult();};
-$("total").oninput=()=>updateAll();
-
-function showLocation(msg,type="info"){const e=$("locationStatus");e.className="status "+type;e.innerHTML=msg;}
-function getLocation(){
-  if(!window.isSecureContext && location.protocol!=="file:"){showLocation("⚠️ 目前不是安全 HTTPS 網頁，Safari 可能拒絕定位。建議用 GitHub Pages 開啟。","err");return;}
-  if(!navigator.geolocation){showLocation("❌ 此瀏覽器不支援定位功能。","err");return;}
-  showLocation("📍 正在取得目前位置，請稍候…","info");
-  navigator.geolocation.getCurrentPosition(pos=>{
-    coords={lat:pos.coords.latitude,lon:pos.coords.longitude};
-    showLocation(`✓ 已取得位置：${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}<br><span class="notice">現在可以按「搜尋附近餐廳」。</span>`,"ok");
-  },err=>{
-    let msg="❌ 無法取得位置。";
-    if(err.code===1)msg+=" Safari 尚未允許此網站使用定位。請到「設定 → 隱私權與安全性 → 定位服務」確認已開啟，並在 Safari 網站設定中允許位置。";
-    else if(err.code===2)msg+=" iPhone 暫時無法判斷位置，請確認定位服務與網路連線。";
-    else if(err.code===3)msg+=" 定位逾時，請再試一次。";
-    showLocation(msg+"<br><button class='secondary small' onclick='getLocation()' style='margin-top:8px'>🔄 重新取得位置</button>","err");
-  },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
-}
-$("locBtn").onclick=getLocation;
-
-async function nearby(){
-  if(!coords){getLocation();showLocation("📍 請先允許定位，取得位置後再搜尋附近餐廳。","info");return;}
-  $("restaurants").innerHTML=`<div class="status info">🍜 正在搜尋附近餐廳…</div>`;
-  try{
-    const q=`[out:json][timeout:15];(nwr["amenity"="restaurant"](around:1500,${coords.lat},${coords.lon});nwr["amenity"="fast_food"](around:1500,${coords.lat},${coords.lon}););out center tags;`;
-    const r=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:q});
-    if(!r.ok)throw new Error("餐廳資料服務暫時無法使用");
-    const data=await r.json();
-    const arr=data.elements.map(x=>{const lat=x.lat??x.center?.lat,lon=x.lon??x.center?.lon,t=x.tags||{};return {name:t.name||t["name:zh"]||"未命名餐廳",addr:[t["addr:street"],t["addr:housenumber"]].filter(Boolean).join(" "),lat,lon}}).filter(x=>x.lat&&x.lon).sort((a,b)=>dist(a)-dist(b)).slice(0,15);
-    if(!arr.length){$("restaurants").innerHTML=`<div class="status">附近 1.5 公里沒有找到可用餐廳資料。</div>`;return;}
-    $("restaurants").innerHTML=arr.map((x,i)=>`<div class="restaurant-item"><div class="restaurant-name">${esc(x.name)}</div><div class="restaurant-meta">${esc(x.addr||"附近餐廳")} · 約 ${dist(x).toFixed(2)} km</div><div class="row"><button class="primary small" onclick='chooseRestaurant(${JSON.stringify(x.name)})'>選擇</button><button class="secondary small" onclick='openMaps(${x.lat},${x.lon},${JSON.stringify(x.name)})'>🗺️ Google Maps</button></div></div>`).join("");
-  }catch(e){$("restaurants").innerHTML=`<div class="status err">❌ 搜尋失敗：${esc(e.message)}<br>請確認網路連線後再試。</div>`;}
-}
-function dist(x){const R=6371,dLat=(x.lat-coords.lat)*Math.PI/180,dLon=(x.lon-coords.lon)*Math.PI/180,a=Math.sin(dLat/2)**2+Math.cos(coords.lat*Math.PI/180)*Math.cos(x.lat*Math.PI/180)*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
-function chooseRestaurant(n){$("restaurant").value=n;$("restaurants").innerHTML=`<div class="status ok">✓ 已選擇：${esc(n)}</div>`;}
-function openMaps(lat,lon,name){window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+" "+lat+","+lon)}`,"_blank");}
-$("nearBtn").onclick=nearby;
-
-function save(){
-  calcOwed();updatePaid();
-  const totalC=cents($("total").value),owedC=people.reduce((s,p)=>s+cents(p.owed),0),paidC=people.reduce((s,p)=>s+cents(p.paid),0);
-  if(!$("total").value||!namesOK()){return saveMsg("請填寫餐費與所有人姓名。","err");}
-  if(owedC!==totalC)return saveMsg("個別應付金額總和必須等於總餐費。","err");
-  if(paidC!==totalC)return saveMsg("實際付款總和必須等於總餐費。","err");
-  const s=settle(),records=JSON.parse(localStorage.getItem(KEY)||"[]");
-  records.unshift({id:Date.now(),date:$("date").value,time:$("time").value,restaurant:$("restaurant").value.trim(),total:Number($("total").value),splitMode,payMode,people:people.map(p=>({name:p.name,owed:p.owed,paid:p.paid})),transfers:s.transfers});
-  localStorage.setItem(KEY,JSON.stringify(records));saveMsg("✓ 已儲存到 iPhone 本機。","ok");renderHistory();
-}
-function saveMsg(m,t){$("saveStatus").className="status "+t;$("saveStatus").textContent=m;$("saveStatus").classList.remove("hidden");}
-$("saveBtn").onclick=save;
-
-function renderHistory(){
-  const q=$("search").value.trim().toLowerCase(),rs=JSON.parse(localStorage.getItem(KEY)||"[]");
-  const filtered=rs.filter(r=>[r.date,r.time,r.restaurant,...r.people.map(p=>p.name)].join(" ").toLowerCase().includes(q));
-  if(!filtered.length){$("history").innerHTML=`<div class="notice" style="margin-top:10px">沒有符合的紀錄。</div>`;return;}
-  $("history").innerHTML=filtered.map(r=>`<div class="history-item"><div class="history-head"><div><b>${esc(r.restaurant||"未填寫餐廳")}</b><div class="muted">${esc(r.date)} ${esc(r.time)} · ${r.people.length} 人</div></div><b>${money(r.total)}</b></div><div class="muted" style="margin-top:7px">${r.people.map(p=>esc(p.name)).join("、")}</div><div style="margin-top:9px;display:flex;gap:8px"><button class="secondary small" onclick="showRecord(${r.id})">查看結算</button><button class="danger small" onclick="deleteRecord(${r.id})">刪除</button></div></div>`).join("");
-}
-function showRecord(id){
-  const r=JSON.parse(localStorage.getItem(KEY)||"[]").find(x=>x.id===id);if(!r)return;
-  let s=`<b>${esc(r.restaurant||"未填寫餐廳")}</b><br>${r.date} ${r.time}<br><br>`;
-  r.people.forEach(p=>s+=`${esc(p.name)}：應付 ${money(p.owed)}／實付 ${money(p.paid)}<br>`);
-  s+="<br><b>轉帳：</b><br>";
-  s+=r.transfers.length?r.transfers.map(t=>`${esc(r.people[t.from].name)} → ${esc(r.people[t.to].name)}：${money(t.amount)}`).join("<br>"):"無需轉帳";
-  alert(s.replace(/<br>/g,"\n").replace(/<[^>]+>/g,""));
-}
-function deleteRecord(id){if(!confirm("確定刪除這筆紀錄？"))return;localStorage.setItem(KEY,JSON.stringify(JSON.parse(localStorage.getItem(KEY)||"[]").filter(r=>r.id!==id)));renderHistory();}
-$("search").oninput=renderHistory;
-
-nowInit();renderPeople();updateAll();renderHistory();
-</script>
-</body>
-</html>
+// ===== ① Supabase 設定：完成 Supabase 後只修改這 3 個值 =====
+const SUPABASE_URL="https://rgpowulqlelzxwomyxpf.supabase.co/";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_7V-TylH1m3Rl5O9CRkxK6w_vry7H6o-";
+const HISTORY_LOGIN_EMAIL="pearl.rice@micmdt.com";
+const PEOPLE=["A","S","E","J","P"];
+let selected=new Set(),splitMode="average",payMode="single",owed={},paid={},history=[],myLocation=null;
+const $=id=>document.getElementById(id),isConfigured=()=>SUPABASE_URL.startsWith("https://")&&!SUPABASE_URL.includes("YOUR_")&&SUPABASE_PUBLISHABLE_KEY.startsWith("sb_")&&!SUPABASE_PUBLISHABLE_KEY.includes("YOUR_")&&HISTORY_LOGIN_EMAIL.includes("@");
+const todayStr=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};const nowTime=()=>{const d=new Date();return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`};const money=n=>"NT$ "+Number(n||0).toLocaleString("zh-TW",{minimumFractionDigits:0,maximumFractionDigits:2});const cents=n=>Math.round(Number(n||0)*100);const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function setStatus(t,k="status"){$("cloudStatus").className="status "+k;$('cloudStatus').textContent=t}function selectedPeople(){return PEOPLE.filter(p=>selected.has(p))}
+function init(){$("date").value=todayStr();$("time").value=nowTime();PEOPLE.forEach(p=>{owed[p]=0;paid[p]=0});renderPeople();renderOwed();renderPaid();updateResult();if(isConfigured())setStatus("雲端設定已完成，正在連線…");else setStatus("請先完成 Supabase 設定，再使用雲端功能。","err");loadToday()}
+function renderPeople(){$("people").innerHTML=PEOPLE.map(p=>`<button class="person ${selected.has(p)?"selected":""}" onclick="togglePerson('${p}')">${p}</button>`).join("")}
+function togglePerson(p){selected.has(p)?selected.delete(p):selected.add(p);renderPeople();renderOwed();renderPaid();updateResult()}
+function setSplit(v){splitMode=v;[...$('splitMode').children].forEach(b=>b.classList.toggle('active',b.dataset.v===v));renderOwed();updateResult()}
+function setPay(v){payMode=v;$('singleBtn').classList.toggle('active',v==='single');$('multiBtn').classList.toggle('active',v==='multi');renderPaid();updateResult()}
+function renderOwed(){const ps=selectedPeople(),total=cents($('total').value);if(!ps.length){$('owedArea').innerHTML='<div class="small">請先選擇用餐人員。</div>';return}if(splitMode==='average'){const base=Math.floor(total/ps.length),rem=total-base*ps.length;ps.forEach((p,i)=>owed[p]=(base+(i<rem?1:0))/100);$('owedArea').innerHTML=ps.map(p=>`<span class="tag">${p}：${money(owed[p])}</span>`).join('')}else{$('owedArea').innerHTML=ps.map(p=>`<div class="row" style="align-items:center;margin:5px 0"><b style="width:40px">${p}</b><input data-person="${p}" type="number" min="0" step="1" inputmode="decimal" value="${owed[p]||''}" placeholder="應付金額" oninput="owed[this.dataset.person]=Number(this.value||0);updateOwedStatus();updateResult()"></div>`).join('')+'<div id="owedStatus" class="small"></div>';updateOwedStatus()}}
+function updateOwedStatus(){const e=$('owedStatus');if(!e)return;const s=selectedPeople().reduce((a,p)=>a+cents(owed[p]),0),t=cents($('total').value);e.textContent=`應付合計：${money(s/100)} / 總餐費：${money(t/100)}`;e.className='small '+(s===t?'':'err')}
+function renderPaid(){const ps=selectedPeople();if(!ps.length){$('paidArea').innerHTML='';return}if(payMode==='single'){const cur=ps.includes(paid.__payer)?paid.__payer:ps[0];paid.__payer=cur;$('paidArea').innerHTML=`<select id="payerSelect" onchange="paid.__payer=this.value">${ps.map(p=>`<option ${p===cur?'selected':''}>${p}</option>`).join('')}</select>`}else{$('paidArea').innerHTML=ps.map(p=>`<div class="row" style="align-items:center;margin:5px 0"><b style="width:40px">${p}</b><input data-paid="${p}" type="number" min="0" step="1" inputmode="decimal" value="${paid[p]||''}" placeholder="實際付款" oninput="paid[this.dataset.paid]=Number(this.value||0);updatePaidStatus();updateResult()"></div>`).join('')+'<div id="paidStatus" class="small"></div>';updatePaidStatus()}}
+function updatePaidStatus(){const e=$('paidStatus');if(!e)return;const s=selectedPeople().reduce((a,p)=>a+cents(paid[p]),0),t=cents($('total').value);e.textContent=`付款合計：${money(s/100)} / 總餐費：${money(t/100)}`;e.className='small '+(s===t?'':'err')}
+$('total').addEventListener('input',()=>{if(splitMode==='average')renderOwed();else updateOwedStatus();if(payMode==='multi')updatePaidStatus();updateResult()});
+function calculateTransfers(){const ps=selectedPeople(),payMap={};if(payMode==='single')payMap[paid.__payer||ps[0]]=cents($('total').value);else ps.forEach(p=>payMap[p]=cents(paid[p]));const bal=ps.map(p=>({p,v:(payMap[p]||0)-cents(owed[p])})),cr=bal.filter(x=>x.v>0).map(x=>({...x})),db=bal.filter(x=>x.v<0).map(x=>({p:x.p,v:-x.v})),tr=[];let i=0,j=0;while(i<db.length&&j<cr.length){const a=Math.min(db[i].v,cr[j].v);if(a>0)tr.push({from:db[i].p,to:cr[j].p,amount:a/100});db[i].v-=a;cr[j].v-=a;if(db[i].v===0)i++;if(cr[j].v===0)j++}return tr}
+function updateResult(){const ps=selectedPeople(),t=cents($('total').value);if(!ps.length){$('result').innerHTML='<b>請選擇用餐人員</b>';return}const os=ps.reduce((a,p)=>a+cents(owed[p]),0),psm=payMode==='single'?t:ps.reduce((a,p)=>a+cents(paid[p]),0);let h=`<b>結算</b><br>應付：${money(os/100)}　付款：${money(psm/100)}<hr>`;if(os!==t)h+='<div class="err">⚠️ 應付金額與總餐費不同</div>';if(payMode==='multi'&&psm!==t)h+='<div class="err">⚠️ 付款合計與總餐費不同</div>';const tr=calculateTransfers();h+=tr.length?tr.map(x=>`<div class="transfer">${x.from} → ${x.to}：<b>${money(x.amount)}</b></div>`).join(''):'<div>目前不需要轉帳。</div>';$('result').innerHTML=h}
+async function api(path,opt={}){if(!isConfigured())throw Error('尚未完成 Supabase 設定');const h={apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json',...(opt.headers||{})},tok=sessionStorage.getItem('history_access_token');h.Authorization='Bearer '+(tok||SUPABASE_PUBLISHABLE_KEY);const r=await fetch(SUPABASE_URL+path,{...opt,headers:h}),tx=await r.text();let d=null;try{d=tx?JSON.parse(tx):null}catch{}if(!r.ok)throw Error(d?.message||d?.msg||d?.error_description||tx||`HTTP ${r.status}`);return d}
+async function loadToday(){if(!isConfigured()){$('todayRecords').innerHTML='<div class="small">完成 Supabase 設定後即可同步。</div>';return}try{const d=await api(`/rest/v1/dining_records?record_date=eq.${todayStr()}&select=*&order=meal_time.desc,created_at.desc`);renderRecords(d||[],$('todayRecords'));setStatus('☁️ 已連線，今日資料已同步','ok')}catch(e){$('todayRecords').innerHTML=`<div class="err">載入失敗：${esc(e.message)}</div>`;setStatus('雲端連線失敗','err')}}
+function recordText(r){const people=(r.participants||[]).join('、'),tr=(r.transfers||[]).map(x=>`${x.from}→${x.to} ${money(x.amount)}`).join('；');return `<div class="record"><b>${esc(r.restaurant||'未填餐廳')}</b>　<span class="small">${esc(r.record_date)} ${esc(r.meal_time||'')}</span><br><span class="tag">${esc(people)}</span> <span class="tag">${r.split_mode==='average'?'平均':'個別'}</span> <span class="tag">${r.pay_mode==='single'?'單一付款':'多人付款'}</span><br>總餐費：<b>${money(r.total)}</b>${tr?`<hr><span class="small">結算：${esc(tr)}</span>`:''}</div>`}
+function renderRecords(a,e){e.innerHTML=a.length?a.map(recordText).join(''):'<div class="small">目前沒有紀錄。</div>'}
+async function saveRecord(){if(!isConfigured())return alert('請先完成 Supabase 設定。');const ps=selectedPeople(),total=Number($('total').value||0);if(!ps.length)return alert('請至少選擇一位用餐人員。');if(total<0)return alert('請輸入正確總餐費。');if(splitMode==='individual'&&ps.reduce((a,p)=>a+cents(owed[p]),0)!==cents(total))return alert('個別應付金額合計必須等於總餐費。');if(payMode==='multi'&&ps.reduce((a,p)=>a+cents(paid[p]),0)!==cents(total))return alert('多人付款合計必須等於總餐費。');const payload={record_date:$('date').value,meal_time:$('time').value,restaurant:$('restaurant').value.trim(),participants:ps,total,split_mode:splitMode,pay_mode:payMode,owed:Object.fromEntries(ps.map(p=>[p,Number(owed[p]||0)])),paid:payMode==='single'?{[paid.__payer||ps[0]]:total}:Object.fromEntries(ps.map(p=>[p,Number(paid[p]||0)])),transfers:calculateTransfers(),latitude:myLocation?.lat??null,longitude:myLocation?.lng??null};try{await api('/rest/v1/dining_records',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify(payload)});alert('已儲存到雲端！');$('restaurant').value='';$('total').value='';selected.clear();PEOPLE.forEach(p=>{owed[p]=0;paid[p]=0});paid.__payer=null;renderPeople();renderOwed();renderPaid();updateResult();loadToday()}catch(e){alert('儲存失敗：'+e.message)}}
+function unlockHistory(){if(sessionStorage.getItem('history_access_token'))return loadHistory();$('modal').classList.remove('hidden');$('historyPassword').focus()}function closeModal(){$('modal').classList.add('hidden');$('loginMsg').textContent='';$('historyPassword').value=''}
+async function doHistoryLogin(){const pw=$('historyPassword').value;if(!pw)return;$('loginMsg').textContent='驗證中…';try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:HISTORY_LOGIN_EMAIL,password:pw})});const d=await r.json();if(!r.ok)throw Error(d.error_description||d.msg||'密碼錯誤');sessionStorage.setItem('history_access_token',d.access_token);closeModal();loadHistory()}catch(e){$('loginMsg').textContent='❌ '+e.message}}
+async function loadHistory(){$('todaySection').classList.add('hidden');$('historySection').classList.remove('hidden');$('historyRecords').innerHTML='<div class="small">載入歷史紀錄中…</div>';try{history=await api('/rest/v1/dining_records?select=*&order=record_date.desc,meal_time.desc,created_at.desc');renderHistory()}catch(e){$('historyRecords').innerHTML=`<div class="err">歷史載入失敗：${esc(e.message)}</div>`}}
+function renderHistory(){const q=($('historySearch').value||'').toLowerCase().trim();renderRecords(history.filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)),$('historyRecords'))}function lockHistory(){sessionStorage.removeItem('history_access_token');history=[];$('historySection').classList.add('hidden');$('todaySection').classList.remove('hidden')}function showToday(){$('historySection').classList.add('hidden');$('todaySection').classList.remove('hidden');loadToday()}
+function getLocation(){if(!navigator.geolocation){$('locationStatus').textContent='此瀏覽器不支援定位';return}$('locationStatus').textContent='定位中…';navigator.geolocation.getCurrentPosition(p=>{myLocation={lat:p.coords.latitude,lng:p.coords.longitude};$('locationStatus').textContent=`已取得位置：${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`},e=>$('locationStatus').textContent='定位失敗：'+e.message,{enableHighAccuracy:true,timeout:10000})}
+async function nearbyRestaurants(){if(!myLocation){getLocation();return alert('請先允許定位，再按一次搜尋附近餐廳。')}$('nearby').innerHTML='<div class="small">搜尋中…</div>';const q=`[out:json][timeout:20];(nwr["amenity"="restaurant"](around:1200,${myLocation.lat},${myLocation.lng});nwr["amenity"="cafe"](around:1200,${myLocation.lat},${myLocation.lng}););out center tags;`;try{const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q}),d=await r.json(),list=(d.elements||[]).filter(x=>x.tags?.name).slice(0,20);$('nearby').innerHTML=list.length?list.map(x=>{const lat=x.lat??x.center?.lat,lng=x.lon??x.center?.lon,n=x.tags.name,map=`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;return `<div class="record"><b>${esc(n)}</b><br><button onclick="pickRestaurant('${esc(n).replace(/'/g,'&#39;')}')">選取</button> <a href="${map}" target="_blank">Google Maps</a></div>`}).join(''):'找不到附近餐廳。'}catch(e){$('nearby').innerHTML=`<div class="err">搜尋失敗：${esc(e.message)}</div>`}}
+function pickRestaurant(n){$('restaurant').value=n;window.scrollTo({top:0,behavior:'smooth'})}
+init();
+</script></body></html>
