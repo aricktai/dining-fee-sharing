@@ -65,5 +65,13 @@ async function nearbyRestaurants(){
   places.forEach(place=>{const card=document.createElement('div');card.className='record';card.innerHTML=`<b>${safe(place.name)}</b>${place.address?`<div class="small">${safe(place.address)}</div>`:''}`;const row=document.createElement('div');row.className='row';const use=document.createElement('button');use.textContent='Use';use.onclick=()=>usePlace(place);const favorite=document.createElement('button');favorite.className='nearby-favorite';favorite.type='button';favorite.title='Add to favorites';favorite.setAttribute('aria-label','Add to favorites');favorite.textContent='★';favorite.onclick=()=>addFav(place);const map=document.createElement('a');map.href=googleMap(place.latitude,place.longitude);map.target='_blank';map.rel='noopener';map.textContent='Google Maps';row.append(use,favorite,map);card.append(row);box.append(card)})
  }catch(error){box.innerHTML='<div class="err">Search failed: '+safe(error.message)+'</div>'}
 }
+function ensureCoreMobileControls(){
+ const date=Q('date'),time=Q('time'),buttons=Q('people');
+ if(date&&!date.value)date.value=day();
+ if(time&&!time.value)time.value=clock();
+ if(buttons&&!buttons.querySelector('button'))drawPeople();
+}
 init();
+ensureCoreMobileControls();
+window.addEventListener('pageshow',ensureCoreMobileControls);
 </script></body></html>
