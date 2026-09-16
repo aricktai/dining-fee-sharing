@@ -1,0 +1,10 @@
+# Local / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Secrets
+.env
+.env.*
