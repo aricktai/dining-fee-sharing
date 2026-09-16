@@ -1,0 +1,37 @@
+# Project Context
+
+## 專案
+Dining Record：固定五人群組的外出用餐紀錄與餐費結算 Web App。
+
+## Current Baseline
+**V3.7**
+
+下一次修改為 **V3.8**。
+
+## 技術
+- Single HTML
+- HTML/CSS/JavaScript
+- GitHub Pages
+- Supabase
+- OpenStreetMap / Overpass
+- Google Maps link
+- localStorage（常用地點）
+
+## 固定成員
+A / S / E / J / P；每次 1～5 人。
+
+## 不可違反規則
+1. 個別金額模式不得預填平均值。
+2. 個別金額輸入必須即時顯示與總餐費的差額。
+3. 多人付款輸入必須即時顯示與總餐費的差額。
+4. 不得因每次輸入而重新建立 input，避免 iPhone Safari 鍵盤消失。
+5. 常用地點可新增、查看、選取、刪除，並以 localStorage 保存。
+6. OSM 搜尋不能因特殊餐廳名稱或異常資料造成整個 App 失效。
+7. 今日資料可直接查看；完整歷史需要登入。
+8. 歷史紀錄可搜尋與單筆刪除。
+9. 前端不得放 service_role / secret key。
+10. 每次修改都必須 regression test。
+11. 版本規則：V3.7 → V3.8 → V3.9，不使用 V3.7.1 等多層版本。
+
+## AI 規則
+若文件與使用者最新明確需求衝突，不要自行猜測；先指出衝突。
