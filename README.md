@@ -13,9 +13,37 @@
 - Maps: Google Maps link
 - Members: A / S / E / J / P
 
+## Repository 建議結構
+
+```text
+/
+├── AGENTS.md
+├── index.html
+├── README.md
+├── .gitignore
+├── docs/
+│   ├── PROJECT_CONTEXT.md
+│   ├── PRODUCT_SPEC.md
+│   ├── ARCHITECTURE.md
+│   ├── DATA_MODEL.md
+│   ├── UI_SPEC.md
+│   ├── BUSINESS_RULES.md
+│   ├── API_INTEGRATION.md
+│   ├── CURRENT_STATE.md
+│   ├── CHANGELOG.md
+│   ├── DECISIONS.md
+│   ├── TEST_PLAN.md
+│   ├── CODEX_INSTRUCTIONS.md
+│   ├── CHATGPT_HANDOFF.md
+│   └── RELEASE_CHECKLIST.md
+└── .github/
+    └── copilot-instructions.md
+```
+
 ## 文件角色
 | 文件 | 主要用途 |
 |---|---|
+| AGENTS.md | AI 總規則、文件導航與讀檔策略 |
 | PROJECT_CONTEXT.md | AI 長期專案背景、不可違反規則 |
 | PRODUCT_SPEC.md | 產品需求與功能規格 |
 | ARCHITECTURE.md | 系統架構與模組 |
@@ -31,17 +59,13 @@
 | CHATGPT_HANDOFF.md | ChatGPT ↔ Codex 交接格式 |
 | RELEASE_CHECKLIST.md | 發版前檢查 |
 
-## AI 防失憶原則
-修改前先讀：
-1. PROJECT_CONTEXT.md
-2. CURRENT_STATE.md
-3. PRODUCT_SPEC.md
-4. BUSINESS_RULES.md
-5. DECISIONS.md
+## AI 防失憶與節省 Token 原則
 
-修改後更新：
-- CURRENT_STATE.md
-- CHANGELOG.md
-- 必要時 DECISIONS.md
+實際讀檔策略以根目錄 `AGENTS.md` 為準：
 
-版本只能依序：V3.7 → V3.8 → V3.9。
+- 每次 coding task 必讀：`PROJECT_CONTEXT.md`、`CURRENT_STATE.md`
+- 其他文件依任務類型讀取
+- 不要求每次把 14 個 `docs/*.md` 全部讀完
+- 修改完成後，僅在內容確實受影響時更新對應文件
+
+版本依序：**V3.7 → V3.8 → V3.9 → V4.0**，不使用 V3.7.1 等多層版本。
