@@ -7,6 +7,12 @@
 - individual 100+200+blank / total 500 → 尚差 200
 - exact → 已相符
 - over → 超出
+- average: total 1000 / side dish 200 / 4 people → each owed 250
+- individual: total 1000 / side dish 200 / meals 180+220+150+250 → owed 230+270+200+300 and exact
+- individual shortage: total 1000 / side dish 200 / meals total 750 → owed total 950 and 尚差 50
+- no side dish: side dish blank or 0 → owed equals meals, no NaN/Infinity
+- indivisible side dish: 100 / 3 people → cent allocation totals exactly 100
+- participant change: side dish 200, 4 → 5 people changes share from 50 to 40 immediately
 
 ## Payment
 - single payer
@@ -18,6 +24,7 @@
 - single payer
 - multi payer
 - unequal owed
+- individual meals + side dish + multi payer uses calculated owed in transfers
 
 ## Favorites
 - add from OSM
@@ -42,6 +49,7 @@
 - search
 - single delete
 - lock
+- new record retains and displays side dish total; old record without value displays 0
 
 ## iPhone
 - iPhone 16 Pro date size

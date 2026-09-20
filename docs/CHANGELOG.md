@@ -1,5 +1,11 @@
 # Changelog
 
+## V3.8
+- 新增已包含於總餐費的小菜總額輸入與歷史紀錄顯示。
+- 個別金額模式改為輸入個人主餐，自動顯示小菜分攤與應付金額。
+- 以整數分分配除不盡的小菜餘額，並讓差額、付款與 settlement 使用新的應付結果。
+- 新增向後相容的 `side_dish_total` 欄位 migration 說明。
+
 ## V3.7
 - 強化 OSM / Overpass 搜尋錯誤處理。
 - 避免特殊餐廳名稱造成 Safari string/URL 問題。
@@ -17,4 +23,4 @@
 - 加入常用地點。
 
 ## Version Rule
-Next: V3.8
+Next: V3.9

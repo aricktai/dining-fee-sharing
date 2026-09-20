@@ -11,6 +11,7 @@ Table: `public.dining_records`
 | restaurant | text |
 | participants | jsonb |
 | total | numeric |
+| side_dish_total | numeric, not null, default 0 |
 | split_mode | text |
 | pay_mode | text |
 | owed | jsonb |
@@ -31,6 +32,22 @@ paid:
 
 transfers:
 `[{"from":"S","to":"A","amount":150}]`
+
+`side_dish_total` 保存已包含在 `total` 內的小菜總額。舊資料與缺少該值的資料在前端一律視為 0。
+
+## V3.8 Migration
+
+```sql
+alter table public.dining_records
+  add column if not exists side_dish_total numeric not null default 0;
+
+alter table public.dining_records
+  drop constraint if exists dining_records_side_dish_total_nonnegative;
+
+alter table public.dining_records
+  add constraint dining_records_side_dish_total_nonnegative
+  check (side_dish_total >= 0);
+```
 
 ## RLS Intent
 anon：

@@ -6,6 +6,8 @@
 
 Auth 使用 Supabase password authentication。
 
+V3.8 的新增紀錄 payload 包含 `side_dish_total`。部署 V3.8 前須先執行 `DATA_MODEL.md` 的 additive migration；查閱舊紀錄時，`null` 或缺少此欄位皆視為 0。
+
 ## OpenStreetMap / Overpass
 搜尋 restaurant / cafe，約 1200m 範圍。
 必須處理：
