@@ -25,6 +25,15 @@
 - multi payer
 - unequal owed
 - individual meals + side dish + multi payer uses calculated owed in transfers
+- new transfer defaults to `settled=false`, `settled_at=null`, record `unsettled`
+- toggle one transfer settled/unsettled and verify ISO time is created/cleared
+- mixed transfer states derive `partial`; all true derives `settled`
+- settle-all preserves an existing settled timestamp and timestamps only open items
+- no transfers derives `not_required`
+- legacy transfers without `settled` derive `unknown`, not `unsettled`
+- first legacy toggle upgrades all transfers; selected is true and the rest false
+- pending filter includes only unsettled/partial; completed includes only settled/not_required
+- reload after update retains transfers, timestamps, and derived status
 
 ## Favorites
 - add from OSM

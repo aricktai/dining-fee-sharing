@@ -17,3 +17,7 @@ BR-014：下一版號依序遞增一級。
 BR-015：小菜總額已包含於總餐費，平均分攤不得再次加上小菜。
 BR-016：小菜以「分」為單位平均分配；除不盡的餘分依固定成員順序分配，使小菜分攤合計精確等於小菜總額。
 BR-017：沒有參與者時不計算小菜除法；小菜空白或 0 時視為 0。
+BR-018：每筆新 transfer 必須含 `settled: false` 與 `settled_at: null`；標記結清時保存 ISO datetime，取消時清空時間。
+BR-019：整筆結清狀態集中由 transfers 推導：無 transfer 為 `not_required`；任一 transfer 缺少 Boolean `settled` 為 `unknown`；全 false 為 `unsettled`；真假並存為 `partial`；全 true 為 `settled`。
+BR-020：舊紀錄第一次操作結清狀態時，所有舊 transfers 一併加入結清欄位，未被選取者預設未結清。
+BR-021：「全部結清」只為尚未結清的 transfer 設定當下時間，不覆寫已存在的 `settled_at`。

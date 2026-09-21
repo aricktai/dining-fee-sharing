@@ -41,4 +41,4 @@ Read `CHANGELOG.md` when preparing or recording a version/release change rather 
 - update `DECISIONS.md` only when a confirmed design decision changes or is added
 
 ## Version
-Current **V3.8** → next **V3.9**.
+Current **V3.9** → next **V4.0**.

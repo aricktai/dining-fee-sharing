@@ -84,9 +84,9 @@ Before modifying `index.html`:
 
 ## 5. Versioning Rule
 
-- Current baseline version: **V3.7**
-- Next version: **V3.8**
-- Then: **V3.9 → V4.0 → V4.1 ...**
+- Current baseline version: **V3.9**
+- Next version: **V4.0**
+- Then: **V4.1 → V4.2 ...**
 - Do not create multi-level versions such as V3.7.1, V3.7.6, or V3.7.6.5.
 - Keep version references consistent across code and documentation.
 
