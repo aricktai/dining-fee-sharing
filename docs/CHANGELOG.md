@@ -1,5 +1,11 @@
 # Changelog
 
+## V3.9
+- 新增 transfer 層級的 `settled` 與 `settled_at`，以及集中推導的五種整筆結清狀態。
+- 歷史紀錄新增個別切換、全部結清、待付款摘要與結清狀態篩選。
+- 舊 transfers 保持 `unknown`，首次操作時才向後相容升級全部 transfer。
+- 新增 `settlement_status` additive migration 與 migration 尚未執行時的前端降級保存。
+
 ## V3.8
 - 新增已包含於總餐費的小菜總額輸入與歷史紀錄顯示。
 - 個別金額模式改為輸入個人主餐，自動顯示小菜分攤與應付金額。
@@ -23,4 +29,4 @@
 - 加入常用地點。
 
 ## Version Rule
-Next: V3.9
+Next: V4.0

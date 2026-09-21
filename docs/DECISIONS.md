@@ -32,3 +32,9 @@ V3.7 → V3.8 → V3.9；禁止多層版本號。
 
 ## D-011 Side Dish Persistence
 以 `dining_records.side_dish_total numeric not null default 0` 保存小菜總額。新增欄位而不變更既有欄位；舊紀錄藉由預設值及前端 fallback 視為 0。
+
+## D-012 Transfer-level Settlement Tracking
+結清事實保存在每筆 transfer 的 `settled` 與 `settled_at`，整筆 `settlement_status` 僅作為可由 transfers 重建的查詢欄位，不提供手動修改。舊 transfers 缺少追蹤欄位時一律為 `unknown`，避免把歷史資料誤列為欠款。
+
+## D-013 Additive Settlement Migration
+新增 `settlement_status text not null default 'unknown'` 及允許值 constraint，不修改既有資料、欄位或 RLS。migration 尚未執行時，前端 retry 僅寫入擴充後的 transfers，避免整筆新增或更新失敗，同時提示管理者執行 migration。
