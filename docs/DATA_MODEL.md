@@ -31,6 +31,8 @@ owed:
 paid:
 `{"A":500}` 或 `{"A":100,"S":200,"E":200}`
 
+`paid` 的 key 不受 `participants` 限制；例如 `participants = ["A","E","J"]` 時，`paid = {"S":900}` 是合法資料。非 participant 付款人的 owed 視為 0。此規則沿用既有 JSONB 欄位，不需要 migration。
+
 V3.9 transfers：
 `[{"from":"S","to":"A","amount":150,"settled":false,"settled_at":null}]`
 

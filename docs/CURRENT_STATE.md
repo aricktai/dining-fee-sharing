@@ -1,7 +1,7 @@
 # Current State
 
 ## Version
-**V3.9**
+**V3.9.2**
 
 ## Implemented Baseline
 - [x] A/S/E/J/P
@@ -30,11 +30,14 @@
 - [x] 每筆 transfer 的結清狀態與結清時間追蹤
 - [x] 整筆紀錄的結清狀態、全部結清與歷史篩選
 - [x] V3.8 舊 transfers 的 unknown 相容及首次操作升級
+- [x] 付款人與用餐 participants 分離，固定 A/S/E/J/P 均可付款
+- [x] 單一付款人預設為 S，且多人付款支援非 participant
+- [x] 補登非今日紀錄時自動要求歷史登入，保留表單並在登入成功後自動儲存
 
 ## Known Risks
 - OSM/Overpass is an external service and may intermittently fail.
 - iOS native date/time controls require visual regression testing.
 - `settlement_status` 快速篩選欄位須由管理者在 Supabase SQL Editor 執行 V3.9 migration；前端在欄位尚未建立時會退回只保存 `transfers` 並顯示警告。
 
-## Next Version
-**V4.0**
+## Version Sequence
+明顯新功能可使用 **V4.0**；V3.9.2 的小修正可繼續使用 **V3.9.3** 等 patch version。

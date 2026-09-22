@@ -15,8 +15,10 @@
 - participant change: side dish 200, 4 → 5 people changes share from 50 to 40 immediately
 
 ## Payment
-- single payer
+- single payer defaults to S and can change to A/E/J/P
+- single payer can be any A/S/E/J/P member not selected as a participant
 - multi payer 100+200+blank / total 500 → 尚差 200
+- multi payer includes all A/S/E/J/P regardless of participants
 - exact
 - over
 
@@ -34,6 +36,9 @@
 - first legacy toggle upgrades all transfers; selected is true and the rest false
 - pending filter includes only unsettled/partial; completed includes only settled/not_required
 - reload after update retains transfers, timestamps, and derived status
+- participants A/E/J, total 900, S paid 900 → A/E/J each owe 300 and transfer to S
+- participants A/E/J, total 900, S paid 600 + A paid 300 → only E/J transfer 300 each to S
+- non-participant payer transfers can progress unsettled → partial → settled through individual toggles
 
 ## Favorites
 - add from OSM
@@ -53,6 +58,11 @@
 
 ## History
 - anonymous today
+- anonymous non-today save opens login before any record POST and preserves the complete form
+- canceling or failing historical-entry login preserves the form and does not POST
+- successful historical-entry login closes the modal, stays on the entry page, and automatically saves exactly once with the authenticated token
+- an already authenticated non-today save proceeds without another prompt
+- an expired/invalid token authentication or RLS failure clears the token, preserves the form, and prompts for login again
 - password prompt
 - authenticated history
 - search
@@ -66,6 +76,8 @@
 - number keyboard
 - cursor stability
 - scrolling
+- title keeps the main text style while the inline V3.9.2 is smaller and gray, without horizontal scrolling
+- all A/S/E/J/P payer controls remain touch-accessible independently of participant selection
 
 ## Release Gate
 Critical regression tests must pass before release.
