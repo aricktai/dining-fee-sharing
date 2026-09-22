@@ -41,4 +41,4 @@ Read `CHANGELOG.md` when preparing or recording a version/release change rather 
 - update `DECISIONS.md` only when a confirmed design decision changes or is added
 
 ## Version
-Current **V3.9.1**. A substantial feature may use **V4.0**; another small fix may use **V3.9.2**.
+Current **V3.9.2**. A substantial feature may use **V4.0**; another small fix may use a later patch version.

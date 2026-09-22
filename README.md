@@ -1,9 +1,9 @@
-# Dining Record V3.9.1 — AI Project Documentation
+# Dining Record V3.9.2 — AI Project Documentation
 
 這是一套供 **ChatGPT + Codex + GitHub** 共用的 Dining Record 專案記憶文件。
 
 ## Baseline
-- Current version: **V3.9.1**
+- Current version: **V3.9.2**
 - Next version follows change scope: **V3.9.2** for another small fix or **V4.0** for a substantial feature
 - Single-file HTML
 - Primary device: iPhone 16 Pro / Safari

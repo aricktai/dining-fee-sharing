@@ -41,3 +41,7 @@
 
 ## D-014 Participants and Payers
 participants 僅表示需分攤餐費的人；付款人獨立從固定 A/S/E/J/P 選取，非 participant 的 owed 為 0，但 paid 仍納入 settlement。單一付款人預設為 S。既有 `participants`、`owed`、`paid`、`transfers` JSON 結構已可表達此狀況，因此不新增 Supabase 欄位。
+
+
+## D-015 Retroactive Record Authentication
+匿名使用者儲存非今日紀錄前須使用既有 Supabase password authentication 登入。登入成功後自動續存；失敗、取消及 token 過期重新登入均保留目前表單。此行為沿用既有 authenticated INSERT RLS，不新增 schema migration。

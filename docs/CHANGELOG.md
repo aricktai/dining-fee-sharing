@@ -1,5 +1,10 @@
 # Changelog
 
+## V3.9.2
+- 匿名使用者補登非今日紀錄時先要求登入，登入成功後自動繼續原本儲存。
+- 登入失敗、取消及 token 過期重新登入時保留完整表單內容。
+- 沿用既有 authenticated INSERT RLS，不新增或修改 Supabase schema migration。
+
 ## V3.9.1
 - 將付款人與用餐 participants 分離，單一與多人付款皆可由固定 A/S/E/J/P 中未用餐的成員付款。
 - 單一付款人預設改為 S，settlement 將非 participant 付款人的 owed 視為 0 並正確產生 transfers。
