@@ -89,3 +89,17 @@
 
 ## Release Gate
 Critical regression tests must pass before release.
+
+## V4.0 Wallet
+- migration 建立 A/S/E/J/P = 0，且 schema 沒有非負餘額 constraint
+- A 與 E 分別儲值 1000；transaction amount/balance_after 正確且錢包互不影響
+- A 150 以 wallet 結清 200 → -50；再儲值 500 → 450，receiver 不增加
+- cash settlement 不產生 wallet transaction；method/time/status 正確
+- 相同 settlement reference retry 只扣一次；快速點擊期間按鈕停用
+- wallet rollback 新增 +amount reversal、不刪原交易；重送只加回一次
+- 模擬 dining record update 失敗時 ledger 與 balance 全部 rollback
+- adjustment 正負皆可、note 必填，調整後可為負
+- 舊 settled/method missing 顯示未記錄且不報錯
+- history 最新在前、最多 50 筆；首頁單次 request 顯示五人餘額
+- regression：V3.8 小菜/個別/平均、V3.9 五狀態、V3.9.1 payer、V3.9.2 補登入、V3.9.3 Overpass fallback/504
+- iPhone 16 Pro：summary wrap、44px 操作、負餘額與 loading/error state

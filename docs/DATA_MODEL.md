@@ -90,3 +90,16 @@ alter table public.dining_records
     )
   );
 ```
+
+## V4.0 Wallet Tables and Migration
+完整可執行 SQL 位於 `supabase/migrations/20260922000000_v4_wallets.sql`。
+
+`wallets`：`person text PK`、`balance numeric(14,2)`（**允許負數，沒有 nonnegative constraint**）、`updated_at timestamptz`。
+
+`wallet_transactions`：identity `id`、時間、person、`type`、signed `amount`、`balance_after`、可選 dining record/transfer metadata、note、唯一 `reference_key`、可選 `reverses_transaction_id`。`dining_record_id` 使用現有 bigint PK；`transfer_index` 穩定識別當下 JSON array 項目。
+
+V4.0 transfer：
+`{"from":"A","to":"S","amount":200,"settled":true,"settled_at":"...","settlement_method":"wallet","wallet_transaction_id":123,"wallet_reference_key":"..."}`。未結清 method 為 null；cash 不含 wallet metadata；舊資料缺 method 保持不變。reversal 後增加 internal `wallet_cycle`，允許未來重新結清而不重用已消耗 reference。
+
+### RLS / Grants
+`wallets` 允許 anon/authenticated SELECT；`wallet_transactions` 僅 authenticated SELECT。無 client direct write grant；authenticated 只執行 `wallet_apply_change`、`settle_transfer_with_wallet`、`reverse_wallet_settlement`。

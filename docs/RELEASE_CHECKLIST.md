@@ -32,6 +32,17 @@
 - [ ] search
 - [ ] delete
 - [ ] RLS
+- [ ] V4.0 wallet migration manually applied
+- [ ] wallet RPC grants and RLS verified
+
+## Wallet V4.0
+- [ ] A/S/E/J/P initial balances
+- [ ] topup and signed adjustment ledger
+- [ ] negative balance settlement remains enabled
+- [ ] cash/wallet settlement methods
+- [ ] duplicate settlement and reversal idempotency
+- [ ] atomic rollback on forced dining update failure
+- [ ] latest-50 transaction history
 
 ## Mobile
 - [ ] iPhone 16 Pro
