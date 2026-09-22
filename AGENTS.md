@@ -84,9 +84,9 @@ Before modifying `index.html`:
 
 ## 5. Versioning Rule
 
-- Current baseline version: **V3.9.2**
+- Current baseline version: **V3.9.3**
 - Feature versions may advance as **V3.8 → V3.9 → V4.0**.
-- Small feature adjustments, UI refinements, bug fixes, and behavior fixes may use patch versions such as **V3.9 → V3.9.1 → V3.9.2**.
+- Small feature adjustments, UI refinements, bug fixes, and behavior fixes may use patch versions such as **V3.9 → V3.9.1 → V3.9.2 → V3.9.3**.
 - Keep version references consistent across code and documentation.
 
 ## 6. Current Architecture

@@ -49,12 +49,19 @@
 - duplicate add behavior
 
 ## OSM
-- success
+- primary success does not call a fallback
+- primary HTTP 504 falls back and renders successful fallback results without an intermediate error
+- primary request timeout is aborted after 12 seconds and falls back without locking the UI
+- primary network error falls back
+- all endpoints failing displays `附近餐廳服務目前較忙碌，請稍後再試。` once
+- explicit HTTP 4xx does not retry a malformed/client request
+- location remains available after all endpoints fail, so search can be retried without GPS
+- rapid repeated taps do not create parallel searches, and the button always returns to its normal state
 - no result
-- HTTP failure
 - invalid JSON
 - special-character restaurant name
 - invalid coordinates
+- successful results still support selection, favorites and Google Maps links
 
 ## History
 - anonymous today
@@ -76,7 +83,8 @@
 - number keyboard
 - cursor stability
 - scrolling
-- title keeps the main text style while the inline V3.9.2 is smaller and gray, without horizontal scrolling
+- title keeps the main text style while the inline V3.9.3 is smaller and gray, without horizontal scrolling
+- OSM loading, AbortController timeout and endpoint fallback work without JavaScript errors or a permanently disabled button
 - all A/S/E/J/P payer controls remain touch-accessible independently of participant selection
 
 ## Release Gate

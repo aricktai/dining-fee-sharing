@@ -12,6 +12,15 @@ V3.9 的新增／結清更新 payload 包含擴充後的 `transfers` 與由其�
 
 ## OpenStreetMap / Overpass
 搜尋 restaurant / cafe，約 1200m 範圍。
+查詢依序使用以下公開 endpoint，每個 request 最多等待 12 秒，每個 endpoint 每次搜尋只嘗試一次：
+1. `https://overpass-api.de/api/interpreter`
+2. `https://overpass.kumi.systems/api/interpreter`
+3. `https://overpass.private.coffee/api/interpreter`
+
+HTTP 5xx、network error、timeout 或 endpoint 回傳無法使用的資料時會自動嘗試下一個 endpoint；明確的 HTTP 4xx 不 fallback，避免對錯誤 query 重複送出。所有 endpoint 都失敗後才顯示一次使用者錯誤，完整原因只記錄於 console。搜尋期間鎖定搜尋按鈕，完成後一定恢復；搜尋失敗不清除已取得的定位。
+
+Overpass QL 使用單一 `nwr["amenity"~"^(restaurant|cafe)$"]` selector、1200m 半徑與 server-side 10 秒 timeout，避免對相同 OSM object 類型建立重複查詢，同時維持原本範圍與餐廳／咖啡廳需求。
+
 必須處理：
 - HTTP error
 - timeout
