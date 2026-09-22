@@ -36,9 +36,13 @@ A 主餐=100, S 主餐=200, E 主餐=空白
 ## 多人付款
 同樣即時計算付款合計與總餐費差額。
 
+付款人與用餐人員是獨立概念：participants 只決定誰需分攤餐費，付款人則可從固定 A/S/E/J/P 全員選擇，即使未參與本次用餐也可付款。單一付款人預設為 S，多人付款仍可由任意固定成員共同付款。
+
 ## 結算
 Balance = paid - owed
 正值為應收，負值為應付。
+
+結算會納入固定 A/S/E/J/P 全員；非 participant 的 owed 為 0，其 paid 仍會產生應收與對應 transfer。
 
 每筆新 transfer 預設未結清；整筆狀態由 transfers 推導為 `unknown`、`unsettled`、`partial`、`settled` 或 `not_required`。舊 transfer 未含結清欄位時顯示「⚪ 未記錄」，不視為欠款；第一次操作時才將整組 transfers 升級為新格式。
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## V3.9.1
+- 將付款人與用餐 participants 分離，單一與多人付款皆可由固定 A/S/E/J/P 中未用餐的成員付款。
+- 單一付款人預設改為 S，settlement 將非 participant 付款人的 owed 視為 0 並正確產生 transfers。
+- 標題版本更新為較小的灰色 V3.9.1，並保留主標題既有樣式。
+- 版本規則新增 patch version，供小功能調整、UI 微調、Bug fix 與行為修正使用。
+
 ## V3.9
 - 新增 transfer 層級的 `settled` 與 `settled_at`，以及集中推導的五種整筆結清狀態。
 - 歷史紀錄新增個別切換、全部結清、待付款摘要與結清狀態篩選。
@@ -29,4 +35,4 @@
 - 加入常用地點。
 
 ## Version Rule
-Next: V4.0
+Feature versions may use V3.9 → V4.0; patch fixes may use V3.9.1 → V3.9.2.
