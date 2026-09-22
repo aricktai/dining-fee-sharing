@@ -30,7 +30,7 @@ Read `CHANGELOG.md` when preparing or recording a version/release change rather 
 - Do not put secret/service_role keys in the frontend.
 - Do not break favorites while modifying OSM behavior.
 - Do not break mobile input behavior while changing UI.
-- Do not create multi-level version numbers.
+- Use feature versions for substantial features and patch versions for small feature adjustments, UI refinements, bug fixes, or behavior fixes.
 
 ## After coding
 - run syntax/structural checks where possible
@@ -41,4 +41,4 @@ Read `CHANGELOG.md` when preparing or recording a version/release change rather 
 - update `DECISIONS.md` only when a confirmed design decision changes or is added
 
 ## Version
-Current **V3.9** → next **V4.0**.
+Current **V3.9.1**. A substantial feature may use **V4.0**; another small fix may use **V3.9.2**.

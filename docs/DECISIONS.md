@@ -25,7 +25,7 @@
 今日資料方便快速使用；完整歷史需要登入。
 
 ## D-009 Versioning
-V3.7 → V3.8 → V3.9；禁止多層版本號。
+較明顯的新功能使用功能版本，例如 V3.8 → V3.9 → V4.0；小功能調整、UI 微調、Bug fix 或行為修正可使用 patch version，例如 V3.9 → V3.9.1 → V3.9.2。
 
 ## D-010 Side Dish Allocation
 小菜總額屬於總餐費的一部分，不另外加在總餐費上。個別模式以整數分為單位分攤小菜，餘分依 A/S/E/J/P 中本次參與者的固定順序分配，確保合計一致且 settlement 沿用最終應付金額。
@@ -38,3 +38,6 @@ V3.7 → V3.8 → V3.9；禁止多層版本號。
 
 ## D-013 Additive Settlement Migration
 新增 `settlement_status text not null default 'unknown'` 及允許值 constraint，不修改既有資料、欄位或 RLS。migration 尚未執行時，前端 retry 僅寫入擴充後的 transfers，避免整筆新增或更新失敗，同時提示管理者執行 migration。
+
+## D-014 Participants and Payers
+participants 僅表示需分攤餐費的人；付款人獨立從固定 A/S/E/J/P 選取，非 participant 的 owed 為 0，但 paid 仍納入 settlement。單一付款人預設為 S。既有 `participants`、`owed`、`paid`、`transfers` JSON 結構已可表達此狀況，因此不新增 Supabase 欄位。
