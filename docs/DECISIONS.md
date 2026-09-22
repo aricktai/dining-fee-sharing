@@ -45,3 +45,6 @@ participants 僅表示需分攤餐費的人；付款人獨立從固定 A/S/E/J/P
 
 ## D-015 Retroactive Record Authentication
 匿名使用者儲存非今日紀錄前須使用既有 Supabase password authentication 登入。登入成功後自動續存；失敗、取消及 token 過期重新登入均保留目前表單。此行為沿用既有 authenticated INSERT RLS，不新增 schema migration。
+
+## D-016 Overpass Endpoint Fallback
+附近餐廳查詢維持 OpenStreetMap / Overpass，依序使用 overpass-api.de、overpass.kumi.systems 與 overpass.private.coffee。每個 endpoint 每次搜尋只嘗試一次並受 12 秒 browser timeout 限制；可恢復的服務端／網路錯誤才 fallback，HTTP 4xx 不重試。搜尋失敗不影響 geolocation state，亦不需要 Supabase migration。

@@ -29,6 +29,9 @@ date/time 必須與一般 text/number input 視覺一致：
 ## Favorites
 餐廳輸入區提供 compact ⭐；OSM 每筆結果提供 ⭐。
 
+## Nearby Restaurant Search
+搜尋期間按鈕顯示「搜尋中…」並停用，避免快速點擊產生平行查詢。Overpass fallback 過程維持 loading，不逐次顯示錯誤；所有 endpoints 都失敗後才顯示一次「附近餐廳服務目前較忙碌，請稍後再試。」，完成後按鈕必須恢復可操作。
+
 ## Settlement Tracking
 - 每張今日／歷史紀錄顯示 `⚪ 未記錄`、`🔴 未結清`、`🟡 部分結清`、`🟢 已結清` 或 `⚪ 無需結清`。
 - 解鎖後的歷史紀錄提供每筆 transfer 至少 44px 高的結清切換按鈕，以及仍有未完成項目時的「全部結清」。

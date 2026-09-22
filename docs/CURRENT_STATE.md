@@ -1,7 +1,7 @@
 # Current State
 
 ## Version
-**V3.9.2**
+**V3.9.3**
 
 ## Implemented Baseline
 - [x] A/S/E/J/P
@@ -17,6 +17,7 @@
 - [x] settlement transfers
 - [x] geolocation
 - [x] OSM nearby search
+- [x] OSM nearby search 的三個 endpoint fallback、12 秒 request timeout 與重複送出防護
 - [x] Google Maps link
 - [x] favorites add/list/select/delete
 - [x] favorites localStorage
@@ -35,9 +36,9 @@
 - [x] 匿名補登非今日紀錄時要求登入，成功後自動續存並保留表單
 
 ## Known Risks
-- OSM/Overpass is an external service and may intermittently fail.
+- OSM/Overpass 的三個公開 endpoints 仍都是外部服務；fallback 可降低單點暫時失敗，但全部 instances 同時忙碌時仍可能失敗。
 - iOS native date/time controls require visual regression testing.
 - `settlement_status` 快速篩選欄位須由管理者在 Supabase SQL Editor 執行 V3.9 migration；前端在欄位尚未建立時會退回只保存 `transfers` 並顯示警告。
 
 ## Version Sequence
-明顯新功能可使用 **V4.0**；V3.9.2 的小修正可繼續使用後續 patch version。
+明顯新功能可使用 **V4.0**；V3.9.3 的小修正可繼續使用後續 patch version。

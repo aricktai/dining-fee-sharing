@@ -1,5 +1,11 @@
 # Changelog
 
+## V3.9.3
+- 附近餐廳搜尋加入三個公開 Overpass endpoints 的有限 fallback；HTTP 5xx、network error、timeout 與無效回應會自動切換 endpoint。
+- 每個 request 加入 12 秒 browser-side timeout，並將 Overpass query 合併為單一 restaurant/cafe selector，維持原本 1200m 半徑。
+- 搜尋期間顯示 loading 並鎖定按鈕，避免平行重複查詢；所有 endpoints 失敗時只顯示一次友善訊息，且保留既有定位。
+- 維持 OpenStreetMap / Overpass、Google Maps link、常用地點與 Supabase schema 不變。
+
 ## V3.9.2
 - 匿名使用者補登非今日紀錄時先要求登入，登入成功後自動繼續原本儲存。
 - 登入失敗、取消及 token 過期重新登入時保留完整表單內容。
@@ -40,4 +46,4 @@
 - 加入常用地點。
 
 ## Version Rule
-Feature versions may use V3.9 → V4.0; patch fixes may use V3.9.1 → V3.9.2.
+Feature versions may use V3.9 → V4.0; patch fixes may use V3.9.1 → V3.9.2 → V3.9.3.
