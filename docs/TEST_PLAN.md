@@ -58,6 +58,11 @@
 
 ## History
 - anonymous today
+- anonymous non-today save prompts for login before INSERT
+- successful login automatically resumes the pending save
+- failed or cancelled login preserves every form value
+- expired token prompts for login again and resumes after success
+- authenticated non-today save uses the existing RLS without schema changes
 - password prompt
 - authenticated history
 - search
@@ -71,7 +76,7 @@
 - number keyboard
 - cursor stability
 - scrolling
-- title keeps the main text style while the inline V3.9.1 is smaller and gray, without horizontal scrolling
+- title keeps the main text style while the inline V3.9.2 is smaller and gray, without horizontal scrolling
 - all A/S/E/J/P payer controls remain touch-accessible independently of participant selection
 
 ## Release Gate

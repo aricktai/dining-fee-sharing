@@ -4,7 +4,7 @@
 Dining Record：固定五人群組的外出用餐紀錄與餐費結算 Web App。
 
 ## Current Baseline
-**V3.9.1**
+**V3.9.2**
 
 功能版本可依 **V3.8 → V3.9 → V4.0** 推進；小功能調整、UI 微調、Bug fix 或行為修正可依 **V3.9 → V3.9.1 → V3.9.2** 使用 patch version。
 

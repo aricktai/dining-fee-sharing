@@ -47,4 +47,4 @@ Balance = paid - owed
 每筆新 transfer 預設未結清；整筆狀態由 transfers 推導為 `unknown`、`unsettled`、`partial`、`settled` 或 `not_required`。舊 transfer 未含結清欄位時顯示「⚪ 未記錄」，不視為欠款；第一次操作時才將整組 transfers 升級為新格式。
 
 ## 歷史
-匿名只能操作今日資料；authenticated 可查看與管理完整歷史。
+匿名只能操作今日資料；authenticated 可查看與管理完整歷史。匿名儲存非今日紀錄時必須先登入；登入成功後自動繼續原本儲存，登入失敗、取消或 token 過期重新登入時都必須保留表單內容。
