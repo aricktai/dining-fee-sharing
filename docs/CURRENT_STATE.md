@@ -1,7 +1,7 @@
 # Current State
 
 ## Version
-**V3.9.3**
+**V4.0**
 
 ## Implemented Baseline
 - [x] A/S/E/J/P
@@ -41,4 +41,14 @@
 - `settlement_status` 快速篩選欄位須由管理者在 Supabase SQL Editor 執行 V3.9 migration；前端在欄位尚未建立時會退回只保存 `transfers` 並顯示警告。
 
 ## Version Sequence
-明顯新功能可使用 **V4.0**；V3.9.3 的小修正可繼續使用後續 patch version。
+目前重大功能版本為 **V4.0**；後續小修正可使用 V4.0.x patch version。
+
+## V4.0 Wallet Implementation
+- [x] 首頁一次讀取五人 wallet summary
+- [x] 獨立錢包儲值、人工調整與最近 50 筆明細
+- [x] 現金／付款者本人錢包結清及 method 顯示
+- [x] 負餘額提醒但不阻擋
+- [x] wallet settlement/reversal 原子 RPC、reference idempotency 與 audit trail
+
+## Deployment Requirement
+上線前須由管理者手動執行 `supabase/migrations/20260922000000_v4_wallets.sql`；本次未直接修改 production Supabase。

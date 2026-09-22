@@ -37,3 +37,11 @@ Overpass QL 使用單一 `nwr["amenity"~"^(restaurant|cafe)$"]` selector、1200m
 ## Geolocation
 使用 browser Geolocation API。
 定位失敗不得阻止手動輸入餐廳。
+
+## V4.0 Wallet RPC
+首頁使用單次 `GET /rest/v1/wallets` 取得五人餘額；authenticated 使用者可讀取每人最近 50 筆 `wallet_transactions`。修改不直接 PATCH table，而呼叫：
+- `wallet_apply_change`：topup / adjustment 與 ledger insert。
+- `settle_transfer_with_wallet`：原子扣款、ledger insert、transfer method/time 與 record status。
+- `reverse_wallet_settlement`：原子建立 reversal、加回餘額及重開 transfer。
+
+所有 RPC 都要求 authenticated JWT 與唯一 reference key。V4.0 migration 需由管理者手動執行；前端不會修改 production schema。

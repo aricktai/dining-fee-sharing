@@ -48,3 +48,12 @@ participants 僅表示需分攤餐費的人；付款人獨立從固定 A/S/E/J/P
 
 ## D-016 Overpass Endpoint Fallback
 附近餐廳查詢維持 OpenStreetMap / Overpass，依序使用 overpass-api.de、overpass.kumi.systems 與 overpass.private.coffee。每個 endpoint 每次搜尋只嘗試一次並受 12 秒 browser timeout 限制；可恢復的服務端／網路錯誤才 fallback，HTTP 4xx 不重試。搜尋失敗不影響 geolocation state，亦不需要 Supabase migration。
+
+## D-017 Personal Wallet Ledger
+每位固定成員使用獨立 `wallets` balance 與 append-only `wallet_transactions`。錢包代表付款者的預存／帳務額度，不是 wallet-to-wallet transfer；允許負餘額且 receiver 不入帳。
+
+## D-018 Atomic and Idempotent Wallet Operations
+錢包修改僅透過 authenticated `security definer` RPC，在單一 PostgreSQL transaction 鎖定資料列並更新 ledger、balance 與（結清時）dining record。partial unique reference 及 reversal source unique index 提供 retry/double-click 防護。
+
+## D-019 Wallet RLS
+餘額可由 anon/authenticated 讀取供首頁 summary；交易明細只可由 authenticated 讀取。兩表均不授予直接寫入，authenticated 僅獲三個受驗證 RPC 的 execute。

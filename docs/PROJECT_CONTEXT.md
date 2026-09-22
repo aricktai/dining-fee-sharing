@@ -4,7 +4,7 @@
 Dining Record：固定五人群組的外出用餐紀錄與餐費結算 Web App。
 
 ## Current Baseline
-**V3.9.3**
+**V4.0**
 
 功能版本可依 **V3.8 → V3.9 → V4.0** 推進；小功能調整、UI 微調、Bug fix 或行為修正可依 **V3.9 → V3.9.1 → V3.9.2 → V3.9.3** 使用 patch version。
 
@@ -37,3 +37,6 @@ A / S / E / J / P；每次 1～5 人。
 
 ## AI 規則
 若文件與使用者最新明確需求衝突，不要自行猜測；先指出衝突。
+
+## V4.0 Wallet Baseline
+A/S/E/J/P 各有獨立 Supabase wallet。餘額可為負數；所有變動保留 immutable transaction，餐費 wallet 結清與撤銷由 database RPC 原子處理。

@@ -24,3 +24,10 @@ BR-021：「全部結清」只為尚未結清的 transfer 設定當下時間，�
 BR-022：participants 只代表需要分攤餐費的人；付款人可為固定 A/S/E/J/P 中任一人，不要求存在於 participants。
 BR-023：單一付款人預設為 S，仍可改選其他固定成員；多人付款也必須提供固定五人，並以五人的付款合計驗證總餐費。
 BR-024：非 participant 的 owed 為 0，其 paid 必須納入 balance 與 transfers 計算。
+
+BR-025：A/S/E/J/P 各有獨立 wallet，付款者只能使用自己的 wallet；receiver wallet 不增加且不支援代付。
+BR-026：wallet balance 可小於 0，不得以餘額不足拒絕 settlement，亦不得建立 `balance >= 0` constraint。
+BR-027：wallet transaction 類型為 topup（正）、settlement（負）、adjustment（正負）及 reversal（與原 settlement 相反）；不得刪除交易以撤銷。
+BR-028：wallet settlement/reversal 必須在 database transaction 同步更新 balance、transaction、transfer 與 settlement_status，並以唯一 reference 防止重複扣款或加回。
+BR-029：新 transfer 含 `settlement_method:null`；現金為 `cash`、錢包為 `wallet`。舊 settled 且 method 缺失者顯示未記錄。
+BR-030：儲值與人工調整皆使用 server-side idempotency key；adjustment 必須填 note。金額以最多兩位小數的 numeric 與前端 cents 運算。

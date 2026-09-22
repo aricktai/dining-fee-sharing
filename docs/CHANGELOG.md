@@ -1,5 +1,11 @@
 # Changelog
 
+## V4.0
+- 新增 A/S/E/J/P 獨立虛擬錢包、首頁 summary、儲值、人工調整與最近 50 筆交易明細。
+- 歷史 transfer 可明確選擇現金或付款者自己的錢包；負餘額只提醒、不阻擋，receiver wallet 不增加。
+- 新增 append-only wallet ledger、唯一 reference、reversal 關聯及三個 authenticated atomic RPC，避免重複扣款、重複加回與部分成功。
+- 新增 additive/idempotent V4.0 migration、RLS 與最小 grants；production migration 由管理者手動執行。
+
 ## V3.9.3
 - 附近餐廳搜尋加入三個公開 Overpass endpoints 的有限 fallback；HTTP 5xx、network error、timeout 與無效回應會自動切換 endpoint。
 - 每個 request 加入 12 秒 browser-side timeout，並將 Overpass query 合併為單一 restaurant/cafe selector，維持原本 1200m 半徑。
