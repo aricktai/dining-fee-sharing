@@ -1,5 +1,12 @@
 # Changelog
 
+## V4.0.1
+- 將首頁 wallet summary 移到新增用餐表單之後、今日紀錄之前，縮小標題與 padding，五人餘額可在 iPhone 寬度自然換行。
+- 首頁錢包區只保留餘額與「錢包管理」入口；負餘額維持合法狀態並以輕量警示色顯示。
+- 移除歷史紀錄的「全部以現金結清」，保留每筆 transfer 的現金／付款者錢包選擇。
+- 已結清 transfer compact 顯示狀態、方式與日期，並弱化「取消結清」；V4.0 wallet reversal 與 cash rollback 行為不變。
+- 本版不變更 Supabase schema、migration、RPC 或 wallet business rules。
+
 ## V4.0
 - 新增 A/S/E/J/P 獨立虛擬錢包、首頁 summary、儲值、人工調整與最近 50 筆交易明細。
 - 歷史 transfer 可明確選擇現金或付款者自己的錢包；負餘額只提醒、不阻擋，receiver wallet 不增加。
@@ -52,4 +59,4 @@
 - 加入常用地點。
 
 ## Version Rule
-Feature versions may use V3.9 → V4.0; patch fixes may use V3.9.1 → V3.9.2 → V3.9.3.
+Feature versions may use V3.9 → V4.0; patch fixes may use V4.0 → V4.0.1.

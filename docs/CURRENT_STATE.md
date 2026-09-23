@@ -1,7 +1,7 @@
 # Current State
 
 ## Version
-**V4.0**
+**V4.0.1**
 
 ## Implemented Baseline
 - [x] A/S/E/J/P
@@ -29,7 +29,7 @@
 - [x] 小菜總額輸入與歷史顯示
 - [x] 個別模式的小菜逐分精確分攤與自動應付金額
 - [x] 每筆 transfer 的結清狀態與結清時間追蹤
-- [x] 整筆紀錄的結清狀態、全部結清與歷史篩選
+- [x] 整筆紀錄的結清狀態與歷史篩選
 - [x] V3.8 舊 transfers 的 unknown 相容及首次操作升級
 - [x] 付款人與用餐 participants 分離，固定 A/S/E/J/P 均可付款
 - [x] 單一付款人預設為 S，且多人付款支援非 participant
@@ -41,7 +41,13 @@
 - `settlement_status` 快速篩選欄位須由管理者在 Supabase SQL Editor 執行 V3.9 migration；前端在欄位尚未建立時會退回只保存 `transfers` 並顯示警告。
 
 ## Version Sequence
-目前重大功能版本為 **V4.0**；後續小修正可使用 V4.0.x patch version。
+目前正式版本為 **V4.0.1**；後續小修正可使用 V4.0.x patch version。
+
+## V4.0.1 UI Simplification
+- [x] 首頁 wallet summary 位於主要輸入流程之後、今日紀錄之前，並採 compact 可換行版面
+- [x] 歷史紀錄只保留每筆 transfer 的現金／付款者錢包結清，移除批次全部現金結清
+- [x] 已結清 transfer 以 compact 狀態／方式／日期顯示，取消結清降為 secondary action
+- [x] Wallet settlement、cash settlement、reversal、負餘額與資料模型維持 V4.0 行為
 
 ## V4.0 Wallet Implementation
 - [x] 首頁一次讀取五人 wallet summary

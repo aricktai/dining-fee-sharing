@@ -34,7 +34,7 @@ date/time 必須與一般 text/number input 視覺一致：
 
 ## Settlement Tracking
 - 每張今日／歷史紀錄顯示 `⚪ 未記錄`、`🔴 未結清`、`🟡 部分結清`、`🟢 已結清` 或 `⚪ 無需結清`。
-- 解鎖後的歷史紀錄提供每筆 transfer 至少 44px 高的結清切換按鈕，以及仍有未完成項目時的「全部結清」。
+- 解鎖後的歷史紀錄為每筆未結清 transfer 提供至少 44px 高的現金與付款者錢包操作，不提供批次「全部以現金結清」。
 - 歷史區提供「全部／待結清／已結清」篩選；待結清只含 unsettled/partial，已結清只含 settled/not_required。
 - transfer 使用可換行排列，避免 iPhone Safari 橫向捲動；未結清摘要直接顯示付款人、收款人及金額。
 
@@ -51,3 +51,9 @@ date/time 必須與一般 text/number input 視覺一致：
 - 錢包管理將「儲值」與「調整」分開，操作中停用修改按鈕；明細每人最多載入最近 50 筆。
 - 歷史未結清 transfer 顯示至少 44px 的「現金」及「付款者錢包」按鈕；錢包確認顯示扣款前後餘額。
 - 已結清顯示 method 與日期；變更方式必須先取消。所有 wallet 失敗均顯示資料未變更。
+
+## V4.0.1 Wallet / Settlement UI
+- 首頁 wallet summary 排在新增用餐表單之後、今日紀錄之前，只提供 A/S/E/J/P 餘額與「錢包管理」。
+- summary 使用低視覺優先級的 compact card；五人餘額可隨 iPhone 寬度自然換行，負數只以警示色輕量提示。
+- 已結清 transfer 將「已結清｜方式｜日期」排成 compact 資訊；「取消結清」為較小的 secondary/text button。
+- 未結清 transfer 仍逐筆顯示「現金」與「付款者錢包」，不得共用或自動選擇結清方式。
