@@ -20,7 +20,7 @@ BR-017：沒有參與者時不計算小菜除法；小菜空白或 0 時視為 0
 BR-018：每筆新 transfer 必須含 `settled: false` 與 `settled_at: null`；標記結清時保存 ISO datetime，取消時清空時間。
 BR-019：整筆結清狀態集中由 transfers 推導：無 transfer 為 `not_required`；任一 transfer 缺少 Boolean `settled` 為 `unknown`；全 false 為 `unsettled`；真假並存為 `partial`；全 true 為 `settled`。
 BR-020：舊紀錄第一次操作結清狀態時，所有舊 transfers 一併加入結清欄位，未被選取者預設未結清。
-BR-021：「全部結清」只為尚未結清的 transfer 設定當下時間，不覆寫已存在的 `settled_at`。
+BR-021：每筆 transfer 必須個別選擇現金或付款者錢包結清，不提供批次全部現金結清。
 BR-022：participants 只代表需要分攤餐費的人；付款人可為固定 A/S/E/J/P 中任一人，不要求存在於 participants。
 BR-023：單一付款人預設為 S，仍可改選其他固定成員；多人付款也必須提供固定五人，並以五人的付款合計驗證總餐費。
 BR-024：非 participant 的 owed 為 0，其 paid 必須納入 balance 與 transfers 計算。

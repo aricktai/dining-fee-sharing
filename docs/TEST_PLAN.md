@@ -30,7 +30,7 @@
 - new transfer defaults to `settled=false`, `settled_at=null`, record `unsettled`
 - toggle one transfer settled/unsettled and verify ISO time is created/cleared
 - mixed transfer states derive `partial`; all true derives `settled`
-- settle-all preserves an existing settled timestamp and timestamps only open items
+- history does not render a batch 「全部以現金結清」 action
 - no transfers derives `not_required`
 - legacy transfers without `settled` derive `unknown`, not `unsettled`
 - first legacy toggle upgrades all transfers; selected is true and the rest false
@@ -103,3 +103,12 @@ Critical regression tests must pass before release.
 - history 最新在前、最多 50 筆；首頁單次 request 顯示五人餘額
 - regression：V3.8 小菜/個別/平均、V3.9 五狀態、V3.9.1 payer、V3.9.2 補登入、V3.9.3 Overpass fallback/504
 - iPhone 16 Pro：summary wrap、44px 操作、負餘額與 loading/error state
+
+## V4.0.1 UI Simplification
+- 首頁 DOM 與視覺順序為新增用餐表單 → wallet summary → 今日紀錄
+- wallet summary 顯示 A/S/E/J/P 正數、0、負數，窄螢幕自然換行且無 horizontal scrolling
+- 「錢包管理」仍可進入儲值、調整與最近 50 筆交易明細
+- 歷史紀錄沒有「全部以現金結清」，未結清 transfer 仍逐筆提供現金與付款者錢包
+- 已結清 transfer compact 顯示狀態、cash/wallet/未記錄方式及日期，且不顯示未結清操作
+- 取消 cash settlement 不改 wallet；取消 wallet settlement 仍透過 reversal RPC 加回款項
+- regression：V3.8 小菜/個別/平均、V3.9 五狀態、V3.9.1 payer、V3.9.2 補登入、V3.9.3 Overpass fallback、V4.0 wallet/idempotency/reversal/負餘額
